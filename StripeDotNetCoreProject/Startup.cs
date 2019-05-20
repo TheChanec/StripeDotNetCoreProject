@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Stripe;
 
 namespace StripeDotNetCoreProject
 {
@@ -22,6 +23,10 @@ namespace StripeDotNetCoreProject
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// Esto sirve para que sirva
+        /// </summary>
+        /// <param name="services">el parametro es el chido</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -31,13 +36,18 @@ namespace StripeDotNetCoreProject
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
+            
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.Configure<StripeSettings>(Configuration.GetSection("Strike"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            StripeConfiguration.SetApiKey(Configuration.GetSection("Stripe")[" TestSecretKey"]);
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -55,4 +65,5 @@ namespace StripeDotNetCoreProject
             app.UseMvc();
         }
     }
+
 }
